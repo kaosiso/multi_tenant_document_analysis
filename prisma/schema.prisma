@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// model User {
+//     id        String    @id @default(cuid())
+//     clerkUserId String  @unique
+//     name      String?
+//     email     String @unique    
+//     posts     Post[]
+//     memberships OrganizationMember[]
+//     documents  Document[]
+
+//     @@Map("users")
+// }
+
+// model Organisation {
+//     id       String     @id @default(cuid)
+//     clerkOrgId String  @unique
+//     name    String?
+//     slug   String      @unique
+//     createdAt DateTime @default(now())
+
+//     members   OrganisationMember[]
+//     document  Document[]
+
+//     @@Map("organizations")
+// }
+
+// model OrganisationMember {
+//     id       String     @id @default(cuid)
+//     OrganizationId String 
+//     UserId    String
+//     role   String      @default("member")
+//     organization  Organization  @relation(fields: [organizationId], references: [id])
+//     user     User          @relation(fields: [userId], references: [id])
+//     createdAt DateTime @default(now())
+
+//     @@unique([organisationId, userId])
+//     @@Map("organizations")
+
+//     @@Map("organizations")
+// }
+
+// model Document {
+//     id       String     @id @default(cuid)
+//     name String 
+//     content    String
+//     fileUrl     String?
+//     fileSize    Int?
+//     fileType    String
+//     aiSummary   String
+//     aiKeywords   String[]
+//     sentiment     String?
+//      OrganizationId String 
+//     UserId    String
+//     organization  Organization  @relation(fields: [organizationId], references: [id])
+//     user     User          @relation(fields: [userId], references: [id])
+//     createdAt    DateTime @default(now())
+
+//     @@unique([organisationId, userId])
+//     @@Map("organizations")
+
+//     @@Map("organizations")
+// }
+
+model User {
+  id          String               @id @default(cuid())
+  clerkUserId String               @unique
+  name        String?
+  email       String               @unique
+  //   posts       Post[]
+  memberships OrganisationMember[]
+  documents   Document[]
+
+  @@map("users")
+}
+
+model Organisation {
+  id         String   @id @default(cuid())
+  clerkOrgId String   @unique
+  name       String?
+  slug       String   @unique
+  createdAt  DateTime @default(now())
+
+  members  OrganisationMember[]
+  document Document[]
+
+  @@map("organizations")
+}
+
+model OrganisationMember {
+  id             String       @id @default(cuid())
+  organisationId String
+  userId         String
+  role           String       @default("member")
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+  createdAt      DateTime     @default(now())
+
+  @@unique([organisationId, userId])
+  @@map("organisation_members")
+}
+
+model Document {
+  id             String       @id @default(cuid())
+  name           String
+  content        String
+  fileUrl        String?
+  fileSize       Int?
+  fileType       String
+  aiSummary      String
+  aiKeywords     String[]
+  sentiment      String?
+  organisationId String
+  userId         String
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+  createdAt      DateTime     @default(now())
+
+  @@unique([organisationId, userId])
+  @@map("documents")
+}
